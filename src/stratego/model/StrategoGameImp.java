@@ -10,26 +10,33 @@ import stratego.util.StrategoPlayerColor;
 public class StrategoGameImp implements StrategoGame{
 
 	protected StrategoState state;
-	protected StragegoRuleSet ruleset;
+	protected StrategoRuleSet ruleset;
+	
+	public StrategoGameImp(){
+		state = new StrategoState();
+		ruleset = new StrategoRuleSet(state);
+
+	}
 	
 	@Override
 	public void initialize(StrategoPlayerColor firstPlayer)
 			throws StrategoException {
-		// TODO Auto-generated method stub
+
 		
 	}
 
 	@Override
-	public MoveResult makeMove(StrategoPieceType pieceType,
-			StrategoCoordinate from, StrategoCoordinate to)
-			throws StrategoException {
-		// TODO Auto-generated method stub
+	public MoveResult makeMove(StrategoPieceType pieceType,	StrategoCoordinate from, StrategoCoordinate to)	throws StrategoException {
+
+		ruleset.PerformPremoveChecks(pieceType, from, to); //TODO finish all checks
+		ruleset.doMove(pieceType, from, to);
+		//TODO determine if player won
 		return null;
 	}
 
 	@Override
 	public String getPrintableBoard() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
