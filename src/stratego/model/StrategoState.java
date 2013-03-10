@@ -96,6 +96,7 @@ public class StrategoState {
 		//If the difference in X xor Y is > 1 throw error
 		//XOR to make sure no diagonals
 		//CHecks everything besides scout
+		//TODO SImplify if/else if, move spy up and everythign else, else
 		if(pieceType == StrategoPieceType.ONE || pieceType == StrategoPieceType.TWO ||
 				pieceType == StrategoPieceType.THREE || pieceType == StrategoPieceType.FOUR||
 				pieceType == StrategoPieceType.FIVE || pieceType == StrategoPieceType.SIX ||

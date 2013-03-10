@@ -19,6 +19,8 @@ public class TestStrategoGameImp {
 	StrategoGameImp game;
 	StrategoCoordImp c[][] = new StrategoCoordImp[10][10];
 
+	//TODO Test moving on/through unplaceable locations
+	
 	@Before
 	public void setupBoard() throws StrategoException{
 		game = new StrategoGameImp();	
