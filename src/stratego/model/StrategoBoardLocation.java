@@ -18,7 +18,14 @@ public class StrategoBoardLocation implements StrategoCoordinate{
 		}
 		//TODO, define all unmoveable locations
 		coord = new StrategoCoordImp(coordinateX, coordinateY);
-		if(coordinateX == 2 && coordinateY == 5){
+		if((coordinateX == 2 && coordinateY == 4) ||
+			(coordinateX == 2 && coordinateY == 5) ||
+			(coordinateX == 3 && coordinateY == 4) ||
+			(coordinateX == 3 && coordinateY == 5) ||
+			(coordinateX == 6 && coordinateY == 4) ||
+			(coordinateX == 6 && coordinateY == 5) ||
+			(coordinateX == 7 && coordinateY == 4) ||
+			(coordinateX == 7 && coordinateY == 5)){
 			placeable = false;		
 		}
 	}
