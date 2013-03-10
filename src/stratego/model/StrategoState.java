@@ -13,9 +13,13 @@ public class StrategoState {
 	protected MoveResult gameStatus = MoveResult.OK;
 	protected StrategoPlayerColor playerTurn = StrategoPlayerColor.RED; //goes first
 	
+	/*
+	 * Contsructor, creates board
+	 */
 	public StrategoState(){
 		board = new StrategoBoard();
 	}	
+	
 	/*
 	 * Checks to see if the game is over
 	 */
@@ -29,7 +33,8 @@ public class StrategoState {
 		}
 		
 	}
-	/*
+	
+	/*	 
 	 * A function to easily make sure that the location is not empty, the coords are in bounds, and the piece type is at the specifed location
 	 */
 	public void canMove(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException {
@@ -54,10 +59,12 @@ public class StrategoState {
 		if(!board.GetBoard()[to.getX()][to.getY()].isPlaceable()){
 			throw new StrategoException("Trying to move to non-placeable location");
 		}
+		if(board.GetBoard()[to.getX()][to.getY()].getPlayerColor() == board.GetBoard()[from.getX()][from.getY()].getPlayerColor()){	//Make sure not moving into own pieces
+			throw new StrategoException("Cannot attack your own pieces");
+		}
 		
 	}
-	
-	
+		
 	/*
 	 * Moves piece to location
 	 */
@@ -68,10 +75,13 @@ public class StrategoState {
 				board.GetBoard()[to.getX()][to.getY()].Populate(playerTurn, pieceType);	
 			}
 			else{
-				
-			}
-			//TODO Fighting logic
-			//Game logic for fighting and moving. 
+				if(checkIfBombAndEvaluate(pieceType, from, to));
+				else if(checkIfFlagAndEvaluate(pieceType, from, to));	
+				else if(checkIfSpyAttackingMarshall(pieceType, from, to));
+				else {
+					checkVictor(pieceType, from, to);
+				}				
+			}			 
 			InvertPlayerTurn();	
 		}
 		else{//For initial placement
@@ -115,11 +125,9 @@ public class StrategoState {
 					//check for smaller number also Y stays same
 					if(to.getX() > from.getX()){ //destination is further
 						smallnum = from.getX();
-
 					}
 					else{	//starting location (from) is further
-						smallnum = to.getX();
-;
+						smallnum = to.getX();;
 					}
 					for(int i = 1; i < dist; i++){ //check every location inbetween
 						if(board.GetBoard()[smallnum + i][to.getY()] != null){ //increase X and check every value inbetween
@@ -149,10 +157,78 @@ public class StrategoState {
 		}
 	}
 	
-	
-	
+	private void checkVictor(StrategoPieceType attackerPieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException{
+		StrategoPieceType defenderPieceType = board.GetBoard()[to.getX()][to.getY()].getPieceType();
+		if (attackerPieceType.getValue() < defenderPieceType.getValue()){//Attacker won
+			board.GetBoard()[to.getX()][to.getY()].DePopulate();//depopulate defender
+			board.GetBoard()[to.getX()][to.getY()].Populate(playerTurn, attackerPieceType);//populate spot with attacker
+			board.GetBoard()[from.getX()][from.getY()].DePopulate(); //depopulate prev attacker
+		}
+		else if(attackerPieceType.getValue() == defenderPieceType.getValue()){
+			board.GetBoard()[to.getX()][to.getY()].DePopulate();
+			board.GetBoard()[from.getX()][from.getY()].DePopulate();
+		}
+		else{//Defender won
+			board.GetBoard()[from.getX()][from.getY()].DePopulate(); //get rid of defender
+		}
+	}
 	
 	/*
+	 * Checks if the spy is attacking the Marshall (1)
+	 */
+	private boolean checkIfSpyAttackingMarshall(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException{
+		if(board.GetBoard()[to.getX()][to.getY()].getPieceType() == StrategoPieceType.ONE && 
+			board.GetBoard()[from.getX()][from.getY()].getPieceType() == StrategoPieceType.SPY){
+			board.GetBoard()[to.getX()][to.getY()].DePopulate();
+			board.GetBoard()[to.getX()][to.getY()].Populate(playerTurn, pieceType);
+			board.GetBoard()[from.getX()][from.getY()].DePopulate();
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	/*
+	 * Checks if the attacker is attacking bomb, if not engineer, destroy piece else destroy bomb
+	 */
+	private boolean checkIfBombAndEvaluate(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException{
+		if(board.GetBoard()[to.getX()][to.getY()].getPieceType() == StrategoPieceType.BOMB){//Check if attacking bomb
+			if(board.GetBoard()[from.getX()][from.getY()].getPieceType() == StrategoPieceType.EIGHT){//Check if Engineer
+				board.GetBoard()[to.getX()][to.getY()].DePopulate();
+				board.GetBoard()[to.getX()][to.getY()].Populate(playerTurn, pieceType);
+				board.GetBoard()[from.getX()][from.getY()].DePopulate();				
+			}	
+			else{
+				board.GetBoard()[from.getX()][from.getY()].DePopulate();
+			}
+			return true; //There was a bomb
+		}
+		else{
+			return false; //no bomb
+		}
+	}
+	
+	/*
+	 * Checks if the attacker is attacking a flag, if so, change state and end game
+	 */
+	private boolean checkIfFlagAndEvaluate(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException{
+		if(board.GetBoard()[to.getX()][to.getY()].getPieceType() == StrategoPieceType.FLAG){
+			board.GetBoard()[to.getX()][to.getY()].DePopulate();
+			System.out.println(playerTurn + " Wins");
+			if(playerTurn == StrategoPlayerColor.RED){
+				gameStatus = MoveResult.RED_WINS;
+			}else{
+				gameStatus = MoveResult.BLUE_WINS;
+			}
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	/*	 
 	 * Switches player's turn
 	 */
 	private void InvertPlayerTurn(){ //Done

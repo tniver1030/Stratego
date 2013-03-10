@@ -16,6 +16,7 @@ public class StrategoBoardLocation implements StrategoCoordinate{
 		if(coordinateX > 9 || coordinateX < 0 || coordinateY > 9 || coordinateY < 0){
 			throw new StrategoException("Location indicated out of range");
 		}
+		//TODO, define all unmoveable locations
 		coord = new StrategoCoordImp(coordinateX, coordinateY);
 		if(coordinateX == 2 && coordinateY == 5){
 			placeable = false;		

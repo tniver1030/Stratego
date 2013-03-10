@@ -17,9 +17,6 @@ import stratego.util.StrategoPlayerColor;
 
 public class TestStrategoGameImp {
 	StrategoGameImp game;
-	
-	//TODO
-	//Test Flag Movement
 	StrategoCoordImp c[][] = new StrategoCoordImp[10][10];
 
 	@Before
@@ -45,7 +42,6 @@ public class TestStrategoGameImp {
 		assertEquals(StrategoPieceType.ONE , game.getBoard().GetBoard()[2][0].getPieceType());
 		assertEquals(StrategoPieceType.TWO , game.getBoard().GetBoard()[1][4].getPieceType());		
 	}
-		
 	@Test(expected = StrategoException.class)
 	public void testBombMovement() throws StrategoException{
 		System.out.println("testBombMovement:");
@@ -56,7 +52,6 @@ public class TestStrategoGameImp {
 			throw e; //throws to prevent from failing
 		}
 	}
-	
 	@Test
 	public void testRegularMovement1YSucceed() throws StrategoException{
 		System.out.println("testRegularMovement1YSucceed:");
@@ -70,7 +65,6 @@ public class TestStrategoGameImp {
 			throw e;
 		}	
 	}
-	
 	@Test(expected = StrategoException.class)
 	public void testRegularMovement1YFailMoveTooFar() throws StrategoException{
 		System.out.println("testRegularMovement1YFailMoveTooFar");
@@ -98,14 +92,13 @@ public class TestStrategoGameImp {
 			throw e;
 		}	
 	}
-	@Test
+	@Test(expected = StrategoException.class)
 	public void testRegularMovement1YMoveIntoOtherPiece() throws StrategoException{
 		System.out.println("testRegularMovement1YMoveIntoOtherPiece");
 		try {
 			game.makeMove(StrategoPieceType.BOMB, null, c[2][1], StrategoPlayerColor.RED); //add piece infront
 			assertEquals(StrategoPieceType.ONE , game.getBoard().GetBoard()[2][0].getPieceType()); //double check location
-			assertEquals(StrategoPieceType.BOMB, game.getBoard().GetBoard()[2][1].getPieceType());
-			
+			assertEquals(StrategoPieceType.BOMB, game.getBoard().GetBoard()[2][1].getPieceType());			
 			game.makeMove(StrategoPieceType.ONE, c[2][0], c[2][1], null);
 			assertEquals(StrategoPieceType.ONE , game.getBoard().GetBoard()[2][0].getPieceType());//double check didnt move
 			assertEquals(StrategoPieceType.BOMB , game.getBoard().GetBoard()[2][1].getPieceType());//double check didnt move
