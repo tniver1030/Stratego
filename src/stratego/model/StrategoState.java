@@ -214,13 +214,16 @@ public class StrategoState {
 	 */
 	private boolean checkIfFlagAndEvaluate(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException{
 		if(board.GetBoard()[to.getX()][to.getY()].getPieceType() == StrategoPieceType.FLAG){
+			StrategoPlayerColor playcol = board.GetBoard()[from.getX()][from.getY()].getPlayerColor();
 			board.GetBoard()[to.getX()][to.getY()].DePopulate();
-			System.out.println(playerTurn + " Wins");
-			if(playerTurn == StrategoPlayerColor.RED){
+			board.GetBoard()[from.getX()][from.getY()].DePopulate();
+			board.GetBoard()[to.getX()][to.getY()].Populate(playcol, pieceType);
+			if(board.GetBoard()[from.getX()][from.getY()].getPlayerColor() == StrategoPlayerColor.RED){
 				gameStatus = MoveResult.RED_WINS;
 			}else{
-				gameStatus = MoveResult.BLUE_WINS;
+				gameStatus = MoveResult.BLUE_WINS;				
 			}
+			System.out.print(gameStatus);
 			return true;
 		}
 		else{
