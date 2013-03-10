@@ -21,8 +21,7 @@ public enum StrategoPieceType
 	FIVE("Five","5"),
 	SIX("Six","6"),
 	SEVEN("Seven","7"),
-	EIGHT("Eight","8"),
-	NINE("Nine","9");
+	EIGHT("Eight","8");
 	
 	private final String printableName;
 	private final String symbol;

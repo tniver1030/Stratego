@@ -54,7 +54,7 @@ public interface StrategoGame
 	 *             the piece is the color of the player who is moving.
 	 */
 	MoveResult makeMove(StrategoPieceType pieceType, StrategoCoordinate from,
-			StrategoCoordinate to) throws StrategoException;
+			StrategoCoordinate to, StrategoPlayerColor playerColor) throws StrategoException;
 
 	/**
 	 * @return a printable representation of the board.

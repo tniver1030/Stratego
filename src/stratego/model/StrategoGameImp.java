@@ -13,31 +13,39 @@ public class StrategoGameImp implements StrategoGame{
 	protected StrategoRuleSet ruleset;
 	
 	public StrategoGameImp(){
-		state = new StrategoState();
-		ruleset = new StrategoRuleSet(state);
+		state = new StrategoState(); //Init state, holds the board
+		ruleset = new StrategoRuleSet(state); //Gives ruleset the proper state
 
 	}
 	
 	@Override
 	public void initialize(StrategoPlayerColor firstPlayer)
-			throws StrategoException {
-
-		
+			throws StrategoException {		
 	}
 
 	@Override
-	public MoveResult makeMove(StrategoPieceType pieceType,	StrategoCoordinate from, StrategoCoordinate to)	throws StrategoException {
-
-		ruleset.PerformPremoveChecks(pieceType, from, to); //TODO finish all checks
-		ruleset.doMove(pieceType, from, to);
-		//TODO determine if player won
+	public MoveResult makeMove(StrategoPieceType pieceType,	StrategoCoordinate from, StrategoCoordinate to, StrategoPlayerColor playerColor)	throws StrategoException {
+		if(from != null){
+			ruleset.PerformPremoveChecks(pieceType, from, to); //Makes sure valid
+			ruleset.doMove(pieceType, from, to, playerColor);	//Does move, and puts winning piece in place
+			ruleset.checkWon();	//Makes sure its not game over
+		}
+		else{
+			//TODO make performpremovechecks for placement
+			ruleset.doMove(pieceType, from, to, playerColor);
+		}
 		return null;
 	}
 
 	@Override
 	public String getPrintableBoard() {
-
 		return null;
+	}
+	/**
+	 * @return the state
+	 */
+	public StrategoBoard getBoard() {
+		return state.board;
 	}
 
 }

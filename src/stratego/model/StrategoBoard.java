@@ -27,13 +27,6 @@ public class StrategoBoard {
 			}
 		}
 		
-		try {
-			board[1][3].Populate(StrategoPlayerColor.RED, StrategoPieceType.FIVE);			
-		} catch (StrategoException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 	
 	public StrategoBoardLocation[][] GetBoard(){
