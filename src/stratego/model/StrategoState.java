@@ -37,9 +37,7 @@ public class StrategoState {
 		//if(!board.GetBoard()[to.getX()][to.getY()].isEmpty()){
 		//	throw new StrategoException("Location to is not empty");//TODO Put game logic here
 		//}
-		if(board.GetBoard()[to.getX()][to.getY()].isPlaceable()){
-			throw new StrategoException("Trying to move to non-placeable location");
-		}
+		
 		if(board.GetBoard()[from.getX()][from.getY()] == null){
 			throw new StrategoException("Location moving from is empty!");//Make sure that the location moving form is not empty		
 		}		
@@ -52,6 +50,9 @@ public class StrategoState {
 			System.out.println(from.getY());
 			System.out.println(board.GetBoard()[from.getX()][from.getY()].getPieceType().toString());			
 			throw new StrategoException("Piece type specified is not at specified location");
+		}
+		if(!board.GetBoard()[to.getX()][to.getY()].isPlaceable()){
+			throw new StrategoException("Trying to move to non-placeable location");
 		}
 		
 	}
