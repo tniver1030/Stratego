@@ -37,6 +37,9 @@ public class StrategoState {
 		//if(!board.GetBoard()[to.getX()][to.getY()].isEmpty()){
 		//	throw new StrategoException("Location to is not empty");//TODO Put game logic here
 		//}
+		if(board.GetBoard()[to.getX()][to.getY()].isPlaceable()){
+			throw new StrategoException("Trying to move to non-placeable location");
+		}
 		if(board.GetBoard()[from.getX()][from.getY()] == null){
 			throw new StrategoException("Location moving from is empty!");//Make sure that the location moving form is not empty		
 		}		
@@ -120,6 +123,9 @@ public class StrategoState {
 					for(int i = 1; i < dist; i++){ //check every location inbetween
 						if(board.GetBoard()[smallnum + i][to.getY()] != null){ //increase X and check every value inbetween
 							throw new StrategoException("Scout trying to move through pieces on X axis (Left right)");
+						}
+						if(board.GetBoard()[smallnum + i][to.getY()].isPlaceable() == false){ //increase X and check every value inbetween
+							throw new StrategoException("Scout trying to move through an unplaceable location");
 						}
 					}
 				}
