@@ -152,7 +152,7 @@ public class TestStrategoGameCombat {
 			assertEquals(null, game.getBoard().GetBoard()[fx][fy].getPieceType());
 			System.out.println("Success");
 		} catch (StrategoException e) {
-			System.out.println("Should have Succeeded in running but didnt "+ e.toString());
+			System.out.println("Should have Succeeded in running but didnt: "+ e.toString());
 		}
 	}
 	private void moveSucceedLose(StrategoPieceType attacker,int fx,int fy,int tx,int ty){
@@ -164,7 +164,7 @@ public class TestStrategoGameCombat {
 			assertEquals(null, game.getBoard().GetBoard()[fx][fy].getPieceType());
 			System.out.println("Success");
 		} catch (StrategoException e) {
-			System.out.println("Should have Succeeded in running but didnt "+ e.toString());
+			System.out.println("Should have Succeeded in running but didnt: "+ e.toString());
 		}
 	}
 	private void moveSucceedTie(StrategoPieceType attacker,int fx,int fy,int tx,int ty){

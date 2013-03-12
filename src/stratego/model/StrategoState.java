@@ -72,7 +72,7 @@ public class StrategoState {
 	 * Moves piece to location
 	 */
 	public void doMove(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to, StrategoPlayerColor playerColor) throws StrategoException{
-		if(playerColor == null){
+		if(playerColor == null){ //Placing pieces
 			if(board.GetBoard()[to.getX()][to.getY()].getPieceType() == null){ //If the move to location is empty, go there
 				board.GetBoard()[from.getX()][from.getY()].DePopulate();
 				board.GetBoard()[to.getX()][to.getY()].Populate(playerTurn, pieceType);	
@@ -116,18 +116,13 @@ public class StrategoState {
 		//XOR to make sure no diagonals
 		//CHecks everything besides scout
 		//TODO SImplify if/else if, move spy up and everythign else, else
-		if(pieceType == StrategoPieceType.ONE || pieceType == StrategoPieceType.TWO ||
-				pieceType == StrategoPieceType.THREE || pieceType == StrategoPieceType.FOUR||
-				pieceType == StrategoPieceType.FIVE || pieceType == StrategoPieceType.SIX ||
-				pieceType == StrategoPieceType.SEVEN || pieceType == StrategoPieceType.SPY){
+		if(pieceType != StrategoPieceType.EIGHT){
 			if(!(Math.abs(to.getX() - from.getX()) != 1 ^ Math.abs(to.getY() - from.getY()) != 1)){
-				//System.out.println("X = " + Math.abs(to.getX() - from.getX()));
-				//System.out.println("Y = " + Math.abs(to.getY() - from.getY()));
 				throw new StrategoException(pieceType + ": Is moving more/less than allowed");
 			}
 		}
 		//Check scout
-		else if(pieceType == StrategoPieceType.EIGHT){//FOr Scout, remember to check that everything inbetween is null
+		else{//For Scout, remember to check that everything inbetween is null
 			if(Math.abs(to.getX() - from.getX()) == 0 || Math.abs(to.getY() - from.getY()) == 0){ //Make sure only moving on 1 plane
 				//check to make sure no pieces inbetween, remember not to count the destination as a point
 				boolean moveX = false;
@@ -204,9 +199,8 @@ public class StrategoState {
 			board.GetBoard()[from.getX()][from.getY()].DePopulate();
 			return true;
 		}
-		else{
-			return false;
-		}
+		return false;
+		
 	}
 	
 	/*
@@ -223,10 +217,9 @@ public class StrategoState {
 				board.GetBoard()[from.getX()][from.getY()].DePopulate();
 			}
 			return true; //There was a bomb
-		}
-		else{
-			return false; //no bomb
-		}
+		}		
+		return false; //no bomb
+		
 	}
 	
 	/*
@@ -255,11 +248,6 @@ public class StrategoState {
 	 * Switches player's turn
 	 */
 	private void InvertPlayerTurn(){ //Done
-		if(playerTurn == StrategoPlayerColor.RED){
-			playerTurn = StrategoPlayerColor.BLUE;
-		}
-		else{
-			playerTurn = StrategoPlayerColor.RED;
-		}
+		playerTurn = (playerTurn == StrategoPlayerColor.RED) ? StrategoPlayerColor.BLUE : StrategoPlayerColor.RED; //Inline if
 	}
 }
