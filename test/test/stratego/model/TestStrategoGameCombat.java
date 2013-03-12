@@ -17,13 +17,14 @@ public class TestStrategoGameCombat {
 	
 	@Before
 	public void setupBoard() throws StrategoException{
+		
 		game = new StrategoGameImp();	
 		for(int i = 0; i <= 9; i++){
 			for(int j = 0; j < 9; j++){
 				c[i][j] = new StrategoCoordImp(i, j);
 			}
 		}			
-		//Place pieces
+
 		game.makeMove(StrategoPieceType.ONE, null, c[0][0], StrategoPlayerColor.RED);	
 		game.makeMove(StrategoPieceType.TWO, null, c[1][0], StrategoPlayerColor.RED);
 		game.makeMove(StrategoPieceType.ONE, null, c[0][1], StrategoPlayerColor.BLUE);

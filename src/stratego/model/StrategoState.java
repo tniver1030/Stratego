@@ -12,12 +12,15 @@ public class StrategoState {
 	protected StrategoBoard board;
 	protected MoveResult gameStatus = MoveResult.OK;
 	protected StrategoPlayerColor playerTurn = StrategoPlayerColor.RED; //goes first
+	private StrategoPieceBox redPieceBox, bluePieceBox;
 	
 	/*
 	 * Contsructor, creates board
 	 */
 	public StrategoState(){
 		board = new StrategoBoard();
+		redPieceBox = new StrategoPieceBox();
+		bluePieceBox = new StrategoPieceBox();
 	}	
 	
 	/*
@@ -85,7 +88,23 @@ public class StrategoState {
 			InvertPlayerTurn();	
 		}
 		else{//For initial placement
-			board.GetBoard()[to.getX()][to.getY()].Populate(playerColor, pieceType);
+			if(playerColor == StrategoPlayerColor.BLUE){
+				if(bluePieceBox.isAvailable(pieceType)){
+					board.GetBoard()[to.getX()][to.getY()].Populate(StrategoPlayerColor.BLUE, pieceType);
+				}
+				else{
+					throw new StrategoException("You cannot place anymore of those, BLUE");
+				}
+			}
+			else{//is red
+				if(redPieceBox.isAvailable(pieceType)){
+					board.GetBoard()[to.getX()][to.getY()].Populate(StrategoPlayerColor.RED, pieceType);
+				}
+				else{
+					throw new StrategoException("You cannot place anymore of those, RED");
+				}
+			}
+			//else throw exception
 		}
 	}
 	
