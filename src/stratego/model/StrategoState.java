@@ -30,11 +30,9 @@ public class StrategoState {
 		if(gameStatus == MoveResult.OK){
 			return true;
 		}
-		else{
-			throw new StrategoException("The game is over");
-			//return false; //Game ended
-		}
-		
+		//return false;
+		throw new StrategoException("The game is over");
+		//TODO: njnjn
 	}
 	
 	/*	 
@@ -43,7 +41,7 @@ public class StrategoState {
 	public void canMove(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException {
 		//Make sure to is empty, make sure the piece at from is correct color and piece type
 		//if(!board.GetBoard()[to.getX()][to.getY()].isEmpty()){
-		//	throw new StrategoException("Location to is not empty");//TODO Put game logic here
+		//	throw new StrategoException("Location to is not empty");
 		//}
 		
 		if(board.GetBoard()[from.getX()][from.getY()] == null){
@@ -115,7 +113,6 @@ public class StrategoState {
 		//If the difference in X xor Y is > 1 throw error
 		//XOR to make sure no diagonals
 		//CHecks everything besides scout
-		//TODO SImplify if/else if, move spy up and everythign else, else
 		if(pieceType != StrategoPieceType.EIGHT){
 			if(!(Math.abs(to.getX() - from.getX()) != 1 ^ Math.abs(to.getY() - from.getY()) != 1)){
 				throw new StrategoException(pieceType + ": Is moving more/less than allowed");
@@ -157,7 +154,6 @@ public class StrategoState {
 					//check for smaller number also X stays same
 					if(to.getY() > from.getY()){ //destination is further
 						smallnum = from.getY();
-
 					}
 					else{	//starting location (from) is further
 						smallnum = to.getY();
