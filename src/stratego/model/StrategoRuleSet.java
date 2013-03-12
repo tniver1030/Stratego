@@ -13,17 +13,29 @@ public class StrategoRuleSet {
 		this.state = state;
 	}
 	
+	/**
+	 * This method verifies that everything is able to run. Used to make sure there are no errors
+	 * 
+	 * @param pieceType
+	 *            the piece type that you are moving
+	 * @param from
+	 * 			  the coordinates that you are moving from
+	 * @param to
+	 * 			  the coordinates that you are moving to
+	 * @throws StrategoExcception
+	 * 			 used if there are any issues
+	 */
 	public void PerformPremoveChecks(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException{ //Checks to make sure is valid move
 		
-		checkGameIsRunning(); //TODO finish checking if game is running, edit state when done
-		checkDestinationValid(pieceType, from, to);
+		checkGameIsRunning(); //Makes sure game isnt over
+		checkDestinationValid(pieceType, from, to); //Makes sure destination is valid
 		checkValidPieceType(pieceType); //Verifies that it is a piece that can move		
 		checkValidMove(pieceType, from, to); //Makes sure piece can move that far
 			
 	}
 
 	private void checkGameIsRunning() throws StrategoException{
-		if(!state.IsGameOver()){
+		if(state.IsGameOver()){
 			throw new StrategoException("Game has ended");
 		}
 	}

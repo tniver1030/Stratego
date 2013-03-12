@@ -9,13 +9,13 @@ import stratego.util.StrategoPlayerColor;
 
 public class StrategoState {
 
-	protected StrategoBoard board;
-	protected MoveResult gameStatus = MoveResult.OK;
+	protected StrategoBoard board;	//The Stratego Board
+	protected MoveResult gameStatus = MoveResult.OK; //Used to check if the game is over or not
 	protected StrategoPlayerColor playerTurn = StrategoPlayerColor.RED; //goes first
 	private StrategoPieceBox redPieceBox, bluePieceBox;
 	
 	/*
-	 * Contsructor, creates board
+	 * Contsructor, creates board and pieces
 	 */
 	public StrategoState(){
 		board = new StrategoBoard();
@@ -23,20 +23,31 @@ public class StrategoState {
 		bluePieceBox = new StrategoPieceBox();
 	}	
 	
-	/*
-	 * Checks to see if the game is over
+	/**
+	 * This method checks whether or not the game is over based on the 'gameStatus' variable
+	 *
+	 * @return whether or not the game has ended (boolean)
 	 */
-	public boolean IsGameOver() throws StrategoException{
+	public boolean IsGameOver(){
 		if(gameStatus == MoveResult.OK){
-			return true;
+			return false;
 		}
-		//return false;
-		throw new StrategoException("The game is over");
-		//TODO: njnjn
+		return true;
+		//throw new StrategoException("The game is over");
 	}
 	
-	/*	 
-	 * A function to easily make sure that the location is not empty, the coords are in bounds, and the piece type is at the specifed location
+	/**
+	 * This method verifies that the piece given can move. It checks to verify the locations are correct and the piece is correct
+	 * 
+	 * @param pieceType
+	 *            the piece type that is being moved
+	 * @param from
+	 *            the coordinate where the piece begins.
+	 * @param to
+	 *            the coordinate where the piece is after the move has been made.
+	 * @throws StrategoException
+	 *            if there are any problems with the move that has been specified, such as placing it onto an unplaceable location,
+	 *            the from field is empty, location specified to is out of bounds, or you are specifying the wrong piece type
 	 */
 	public void canMove(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException {
 		//Make sure to is empty, make sure the piece at from is correct color and piece type
@@ -66,16 +77,32 @@ public class StrategoState {
 		
 	}
 		
-	/*
-	 * Moves piece to location
+	/**
+	 * This method executes a move in the game. It is called for every move that must be
+	 * made. Including placing pieces.
+	 * 
+	 * @param pieceType
+	 *            the piece type that is being moved
+	 * @param from
+	 *            the coordinate where the piece begins. If the coordinate is null, then
+	 *            the piece begins off the board (that is, it is placed on the board in
+	 *            this move).
+	 * @param to
+	 *            the coordinated where the piece is after the move has been made.
+	 * @param playerColor
+	 * 				the color of the player. Null during normal gameplay, playerColor when placing pieces
+	 * @throws StrategoException
+	 *             if there are any problems in making the move (such as specifying a
+	 *             coordinate that does not have the appropriate piece, or the color of
+	 *             the piece is the color of the player who is moving.
 	 */
 	public void doMove(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to, StrategoPlayerColor playerColor) throws StrategoException{
-		if(playerColor == null){ //Placing pieces
+		if(playerColor == null){ //Moving pieces around
 			if(board.GetBoard()[to.getX()][to.getY()].getPieceType() == null){ //If the move to location is empty, go there
 				board.GetBoard()[from.getX()][from.getY()].DePopulate();
 				board.GetBoard()[to.getX()][to.getY()].Populate(playerTurn, pieceType);	
 			}
-			else{
+			else{ //Check any predefined conditions and then evaluate the results
 				if(checkIfBombAndEvaluate(pieceType, from, to));
 				else if(checkIfFlagAndEvaluate(pieceType, from, to));	
 				else if(checkIfSpyAttackingMarshall(pieceType, from, to));
@@ -83,7 +110,7 @@ public class StrategoState {
 					checkVictor(pieceType, from, to);
 				}				
 			}			 
-			InvertPlayerTurn();	
+			InvertPlayerTurn();	 //Change players turn
 		}
 		else{//For initial placement
 			if(playerColor == StrategoPlayerColor.BLUE){
@@ -102,12 +129,21 @@ public class StrategoState {
 					throw new StrategoException("You cannot place anymore of those, RED");
 				}
 			}
-			//else throw exception
 		}
 	}
 	
-	/*
-	 * Makes sure that the specified piece is able to move that distance A LOT of game logic here. Assume pieceType is valid for moving
+	/**
+	 * This method makes sure that a move specified is valid (IE, only moving 1 spot at a time, and nothing inbetween. Also checks to make sure 
+	 * not attacking own pieces
+	 * 
+	 * @param pieceType
+	 *            the piece type that is being moved
+	 * @param from
+	 *            the coordinate where the piece begins.
+	 * @param to
+	 *            the coordinated where the piece is after the move has been made.
+	 * @throws StrategoException
+	 *             if there are any issues making the move(You are moving more or less than allowed, or through pieces
 	 */
 	public void checkValidMove(StrategoPieceType pieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException{		
 		//If the difference in X xor Y is > 1 throw error
@@ -168,14 +204,26 @@ public class StrategoState {
 		}
 	}
 	
+	/**
+	 * This method executes a move in the game. It determines who won the fight and places the pieces in the correct locations
+	 * 
+	 * @param pieceType
+	 *            the piece type that is being moved
+	 * @param from
+	 *            the coordinate where the piece begins.
+	 * @param to
+	 *            the coordinated where the piece is after the move has been made.
+	 * @throws StrategoException
+	 *           if the piece specified is not in the right spot
+	 */
 	private void checkVictor(StrategoPieceType attackerPieceType, StrategoCoordinate from, StrategoCoordinate to) throws StrategoException{
-		StrategoPieceType defenderPieceType = board.GetBoard()[to.getX()][to.getY()].getPieceType();
+		StrategoPieceType defenderPieceType = board.GetBoard()[to.getX()][to.getY()].getPieceType(); //get defender piecetype
 		if (attackerPieceType.getValue() < defenderPieceType.getValue()){//Attacker won
 			board.GetBoard()[to.getX()][to.getY()].DePopulate();//depopulate defender
 			board.GetBoard()[to.getX()][to.getY()].Populate(playerTurn, attackerPieceType);//populate spot with attacker
 			board.GetBoard()[from.getX()][from.getY()].DePopulate(); //depopulate prev attacker
 		}
-		else if(attackerPieceType.getValue() == defenderPieceType.getValue()){
+		else if(attackerPieceType.getValue() == defenderPieceType.getValue()){ //Tie
 			board.GetBoard()[to.getX()][to.getY()].DePopulate();
 			board.GetBoard()[from.getX()][from.getY()].DePopulate();
 		}
@@ -243,7 +291,7 @@ public class StrategoState {
 	/*	 
 	 * Switches player's turn
 	 */
-	private void InvertPlayerTurn(){ //Done
+	private void InvertPlayerTurn(){
 		playerTurn = (playerTurn == StrategoPlayerColor.RED) ? StrategoPlayerColor.BLUE : StrategoPlayerColor.RED; //Inline if
 	}
 }
