@@ -22,18 +22,14 @@ public class StrategoState {
 		redPieceBox = new StrategoPieceBox();
 		bluePieceBox = new StrategoPieceBox();
 	}	
-	
+		
 	/**
-	 * This method checks whether or not the game is over based on the 'gameStatus' variable
+	 * This method returns 'gamestatus' useful for checking to see who won
 	 *
 	 * @return whether or not the game has ended (boolean)
 	 */
-	public boolean IsGameOver(){
-		if(gameStatus == MoveResult.OK){
-			return false;
-		}
-		return true;
-		//throw new StrategoException("The game is over");
+	public MoveResult getGameStatus(){
+		return gameStatus;		
 	}
 	
 	/**

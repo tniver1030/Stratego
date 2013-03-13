@@ -28,7 +28,7 @@ public class StrategoGameImp implements StrategoGame{
 		if(from != null){
 			ruleset.PerformPremoveChecks(pieceType, from, to); //Makes sure valid
 			ruleset.doMove(pieceType, from, to, playerColor);	//Does move, and puts winning piece in place
-			ruleset.checkWon();	//Makes sure its not game over
+			ruleset.checkWhoWon();	//Makes sure its not game over
 		}
 		else{
 			//TODO make performpremovechecks for placement
