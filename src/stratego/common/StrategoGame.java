@@ -15,7 +15,7 @@ import stratego.util.StrategoPlayerColor;
  * external code. Every version of Stratego will have a realization of
  * the StrategoGame interface.
  * 
- * @author David Keeley
+ * @author Taylor Niver, with assistance from David Keeley
  * @version Mar 4, 2013
  */
 public interface StrategoGame

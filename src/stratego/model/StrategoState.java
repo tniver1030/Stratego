@@ -129,7 +129,7 @@ public class StrategoState {
 	}
 	
 	/**
-	 * This method makes sure that a move specified is valid (IE, only moving 1 spot at a time, and nothing inbetween. Also checks to make sure 
+	 * This method makes sure that a move specified is valid (IE, only moving 1 spot at a time, and nothing in-between. Also checks to make sure 
 	 * not attacking own pieces
 	 * 
 	 * @param pieceType
